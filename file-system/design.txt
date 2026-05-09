@@ -24,11 +24,12 @@ ENTITIES & RELATIONSHIPS
 ═══════════════════════════════════════════════════════════════════════════
 
 FileSystem
-Directory
-File
+FileSystemEntry
+ - Directory
+ - File
 
-FileSystem stores set of directories (at root level) - Handles all the fs operations
-Directory contains set of directories or files.
+FileSystem stores root directory - Handles all the fs operations
+Directory contains FileSystemEntry(Directories/Files) as children
 
 
 ═══════════════════════════════════════════════════════════════════════════
