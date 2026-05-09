@@ -1,0 +1,74 @@
+═══════════════════════════════════════════════════════════════════════════
+REQUIREMENTS
+═══════════════════════════════════════════════════════════════════════════
+
+
+1. File system of multiple directories and files
+2. Operations supported are create (files and directories), delete, list (contents of a directory), rename, and move (a file or directory to a different location).
+3. Unix like file paths - /home/etc/abc.txt
+4. System stores everything in-memory
+5. Contents of a file is a String
+6. File system should appropriate exceptions on invalid operations
+    - Creating a dir/file in a non-existent directory
+    - Deleting a file which doesn't exist
+    - Moving to an invalid directory
+    - Name collision
+
+Out of Scope:
+1. Relative paths
+2. Permissions
+3. UI
+
+═══════════════════════════════════════════════════════════════════════════
+ENTITIES & RELATIONSHIPS
+═══════════════════════════════════════════════════════════════════════════
+
+FileSystem
+Directory
+File
+
+FileSystem stores set of directories (at root level) - Handles all the fs operations
+Directory contains set of directories or files.
+
+
+═══════════════════════════════════════════════════════════════════════════
+Class Design
+═══════════════════════════════════════════════════════════════════════════
+
+class FileSystem:
+- root: Directory
+
++ createFolder(String path, String name) -> void
++ createFile(String path, String name, String content) -> void
++ deleteFileSystemEntry(String path) -> void
++ moveFileSystemEntry(String fromPath, String toPath) -> void
++ renameFile(String path, String newName) -> void
++ getFileContent(String path) -> String
++ getContents(String dirPath) -> FileSystemEntry
+
+abstract class FileSystemEntry:
+- name: String
+- parent: Directory
+
++ getName() -> String
++ setName(String name) -> void
++ getParent() -> Directory
++ setParent(Directory parent) -> void
+
+class Directory extends FileSystemEntry:
+- children: Map<String, FileSystemEntry>
+
++ getChildren() -> Map<String, FileSystemEntry>
++ setChildren(Map<String, FileSystemEntry>) -> void
++ containsChild(String name) -> boolean
++ getChild(String dirName) -> Optional<FileSystemEntry>
++ createDirectory(String name) -> void
++ createFile(String name, String content) -> void
++ removeChild(String name) -> void
++ addChild(FileSystemEntry sourceLeafNode) -> void
+
+class File extends FileSystemEntry:
+- content: String
+
++ getContent() -> String
++ setContent(String content) -> void
