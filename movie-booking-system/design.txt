@@ -1,0 +1,95 @@
+═══════════════════════════════════════════════════════════════════════════
+REQUIREMENTS
+═══════════════════════════════════════════════════════════════════════════
+
+The system must support multiple theatres, multiple screens within a theatre
+Users can search for movies by title
+Users can browse movies playing at a given theater
+Users can select and book multiple seats
+Seat map - A-Z: 0-20.
+Ticket is issued soon after booking - it should have a confirmation id
+Booking can be cancelled
+If a seat is already taken, user should receive an error or message.
+Concurrent booking of the same seat: exactly one succeeds
+
+Out of scope:
+Payment processing
+Variable seat layouts or seat types
+Rescheduling
+UI rendering
+
+
+═══════════════════════════════════════════════════════════════════════════
+ENTITIES & RELATIONSHIPS
+═══════════════════════════════════════════════════════════════════════════
+
+BookingService
+Theatre
+Screen
+Movie
+Seat
+Show
+Ticket
+User //Optional
+
+Booking service is the orchestrator
+Booking service has list of theatres.
+Theatre has multiple shows.
+Each Show has a Screen, Movie, Seats
+On booking, the show maintains the tickets mapping.
+Ticket has reference to seat(s) booked and show
+
+
+═══════════════════════════════════════════════════════════════════════════
+Class Design
+═══════════════════════════════════════════════════════════════════════════
+
+class BookingService:
+- theatres: List<Theatre>
+- ticketRegistry: Map<confirmationId, Ticket>
+
++ getShowsByMovie(String substring) -> List<Show>
++ getShowsInATheatre(String theatreName) -> List<Show>
++ getSeats(Show show) -> List<Seat>
++ bookShow(Show show, List<String> seatIds) -> Ticket
++ cancelBooking(String confirmationId) -> void
+
+
+class Theatre:
+- id: String
+- name: String
+- showMap: Map<movieName, List<Show>>
+
++ addShow(Show show) -> void
++ getShows() -> List<Show>
++ getShows(String movieName) -> List<Show>
+
+class Show:
+- screen: Screen
+- movie: Movie
+- startTime: Date
+
+
+class Screen:
+- seats: List<Seat>
+- theatre: Theatre
+
++ getSeats() -> List<Seat>
+
+
+class Ticket:
+- confirmationId: String
+- show: Show
+- seats: List<Seat>
+
+
+class Seat:
+- seatId: String //(A10)
+- row: char
+- seatNumber: int
+- screen: Screen
+
+
+class Movie:
+- id: String
+- title: String
